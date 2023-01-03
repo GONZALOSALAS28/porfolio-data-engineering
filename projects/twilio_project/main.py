@@ -1,16 +1,11 @@
 import os
 import time
-import json
 import pandas as pd
 import requests
 
 from dotenv import load_dotenv
 from twilio.rest import Client
-from requests import Request, Session
-from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 from datetime import datetime
-
-from bs4  import BeautifulSoup
 from tqdm import tqdm
 
 load_dotenv()
@@ -44,6 +39,8 @@ df = df[df['Hour']==current_hour]
 
 df_rain = df[['Hour','Condition', 'Rain', 'Prob_Rain', 'Temperature']]
 df_rain = df_rain.to_string(index=False)
+
+# message to send
 message = '\nHola! \n\n\n El pronostico del tiempo hoy '+ df['Date'][current_hour] +' en ' + query +' es : \n\n\n ' + str(df_rain)
 time.sleep(2)
 # send message to twilio
