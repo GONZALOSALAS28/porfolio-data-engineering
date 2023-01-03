@@ -1,57 +1,27 @@
 import os
-import time
-import pandas as pd
-import requests
 
-from dotenv import load_dotenv
-from twilio.rest import Client
-from datetime import datetime
+
 from tqdm import tqdm
+from utils import request_wapi,get_forecast,create_df,send_message,get_date
 
-load_dotenv()
-
-def get_forecast(response, i):
-  date = response['forecast']['forecastday'][0]['hour'][i]['time'].split()[0]
-  hour = int(response['forecast']['forecastday'][0]['hour'][i]['time'].split()[1].split(':')[0])
-  condition = response['forecast']['forecastday'][0]['hour'][i]['condition']['text']
-  temp = float(response['forecast']['forecastday'][0]['hour'][i]['temp_c'])
-  rain = response['forecast']['forecastday'][0]['hour'][i]['will_it_rain']
-  prob_rain = response['forecast']['forecastday'][0]['hour'][i]['chance_of_rain']
-
-  return date, hour, condition, temp, rain, prob_rain
 
 query = 'Toluca'
 api_key = os.getenv('API_KEY_WAPI')
 # Armado de la URL
-url_clima = 'http://api.weatherapi.com/v1/forecast.json?key='+api_key+'&q='+query+'&days=1&aqi=no&alerts=no'
-response = requests.get(url_clima).json()
+input_date= get_date()
+response = request_wapi(api_key,query)
 
 data = []
 
 for i in tqdm(range(len(response['forecast']['forecastday'][0]['hour'])),colour = 'green'):
 
     data.append(get_forecast(response,i))
-col = ['Date','Hour','Condition','Temperature','Rain','Prob_Rain']
-df = pd.DataFrame(data,columns=col)
-df = df.sort_values(by = 'Hour',ascending = True)
-current_hour = datetime.now().hour
-df = df[df['Hour']==current_hour]
 
-df_rain = df[['Hour','Condition', 'Rain', 'Prob_Rain', 'Temperature']]
-df_rain = df_rain.to_string(index=False)
+df_rain = create_df(data)
 
-# message to send
-message = '\nHola! \n\n\n El pronostico del tiempo hoy '+ df['Date'][current_hour] +' en ' + query +' es : \n\n\n ' + str(df_rain)
-time.sleep(2)
-# send message to twilio
-account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-phone_number = os.getenv('PHONE_NUMBER')
-my_phone_number = os.getenv('MY_PHONE_NUMBER')
-client = Client(account_sid, auth_token)
-message = client.messages.create(
-                              body=message,
-                              from_=phone_number,
-                              to=my_phone_number
-                          )
-print(message.sid)
+message = '\nHola! \n\n\n El pronostico del tiempo hoy '+ input_date +' en ' + query +' es : \n\n\n ' + str(df_rain)
+
+# Send Message
+message_id = send_message(message)
+
+print('Mensaje Enviado con exito ' + message_id)
