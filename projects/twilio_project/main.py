@@ -38,5 +38,23 @@ for i in tqdm(range(len(response['forecast']['forecastday'][0]['hour'])),colour 
     data.append(get_forecast(response,i))
 col = ['Date','Hour','Condition','Temperature','Rain','Prob_Rain']
 df = pd.DataFrame(data,columns=col)
-df = df.sort_values(by = 'Hora',ascending = True)
-breakpoint()
+df = df.sort_values(by = 'Hour',ascending = True)
+current_hour = datetime.now().hour
+df = df[df['Hour']==current_hour]
+
+df_rain = df[['Hour','Condition', 'Rain', 'Prob_Rain', 'Temperature']]
+df_rain = df_rain.to_string(index=False)
+message = '\nHola! \n\n\n El pronostico del tiempo hoy '+ df['Date'][current_hour] +' en ' + query +' es : \n\n\n ' + str(df_rain)
+time.sleep(2)
+# send message to twilio
+account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+phone_number = os.getenv('PHONE_NUMBER')
+my_phone_number = os.getenv('MY_PHONE_NUMBER')
+client = Client(account_sid, auth_token)
+message = client.messages.create(
+                              body=message,
+                              from_=phone_number,
+                              to=my_phone_number
+                          )
+print(message.sid)
