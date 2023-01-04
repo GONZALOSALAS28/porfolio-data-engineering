@@ -1,0 +1,4 @@
+millify == 0.1.1
+python-dotenv==0.21.
+pandas==1.5.2
+tqdm==4.64.1
