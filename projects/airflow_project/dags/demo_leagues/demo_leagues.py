@@ -1,12 +1,8 @@
 from datetime import datetime, timedelta
-import airflow
 from airflow.models import Variable
-from airflow import models
 from airflow.models import DAG
-from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.contrib.operators.snowflake_operator import SnowflakeOperator
-import snowflake.connector as sf
 import pandas as pd
 from utils import get_data,data_processing
 from datetime import datetime
@@ -52,8 +48,8 @@ with DAG('FOOTBAL_LEAGUES',
          upload_stage = SnowflakeOperator(
 
                     task_id='upload_data_stage',
-                    sql='./queries/upload_stage.sql',
-                    snowflake_conn_id='demo_conn',
+                    sql='./sql/upload_stage.sql',
+                    snowflake_conn_id='demo_snowflake',
                     warehouse=params_info["DWH"],
                     database=params_info["DB"],
                     role=params_info["ROLE"],
@@ -62,8 +58,8 @@ with DAG('FOOTBAL_LEAGUES',
          ingest_table = SnowflakeOperator(
 
                     task_id='ingest_table',
-                    sql='./queries/upload_table.sql',
-                    snowflake_conn_id='demo_conn',
+                    sql='./sql/upload_table.sql',
+                    snowflake_conn_id='demo_snowflake',
                     warehouse=params_info["DWH"],
                     database=params_info["DB"],
                     role=params_info["ROLE"],
