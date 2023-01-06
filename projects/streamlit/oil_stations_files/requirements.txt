@@ -2,7 +2,7 @@ streamlit
 streamlit-folium
 pandas
 numpy
-Pillow>= 9.3
+Pillow==9.4.0
 pyproj
 haversine
 Shapely
