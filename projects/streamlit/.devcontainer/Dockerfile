@@ -34,3 +34,11 @@ RUN cd && wget -O Miniforge3.sh https://github.com/conda-forge/miniforge/release
 ENV PATH /home/vscode/miniforge3/bin:$PATH
 
 RUN conda install streamlit geopandas pip -y
+
+COPY requirements.txt .
+
+RUN conda init zsh \
+  && echo "conda activate base" >> ~/.zshrc \
+  && echo "conda activate base" >> ~/.bashrc \
+  conda activate base && \
+  pip install -r requirements.txt
