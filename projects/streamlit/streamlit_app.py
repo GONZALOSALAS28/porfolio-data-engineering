@@ -4,7 +4,7 @@ import numpy as np
 
 st.title('Basic Streamlit app')
 from PIL import Image
-image = Image.open('1_Fuel-prices.jpg')
+image = Image.open('')
 st.image(image, caption='Sunrise by the mountains')
 
 if st.button('It works!'):
