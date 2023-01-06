@@ -147,4 +147,3 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/python,virtualenv
 .ipynb_checkpoints/
-*.csv*
