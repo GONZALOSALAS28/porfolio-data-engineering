@@ -41,14 +41,35 @@ if app_mode == 'Run App':
 
   choose_city =  c2.selectbox("Choose city", cities)
 
-  central_location = c2.text_input('Central Location', 'CC Multiplaza , Bogotá')
+  central_location = c2.text_input('Central Location', 'Starbucks Calle 72 , Bogotá')
 
   DEVELOPER_KEY = os.getenv('API_KEY')
 
   if len(central_location) != 0 :
     R = GetLatLon2(central_location,DEVELOPER_KEY)
-    geo
-    breakpoint()
+    geo_source = R[1],R[2]
+
+    unit = 'Km'
+    rad = c4.slider('Radius',1,3,1)
+
+    df_city = df_map[df_map['Municipio']==choose_city]
+    df_city.reset_index(inplace = True)
+    df_city.drop(columns = 'index',inplace = True)
+
+    df_city =  transform_df_map(df_city)
+
+    results = distance_estac(geo_source,df_city,rad,unit)
+    results = results.reset_index()
+    results = results.drop(columns = 'index')
+    products =  list(results['Producto'].unique())
+
+    gdf_stores_results = GeoDataFrame(results,
+                                            geometry=points_from_xy(results.LNG,results.LAT))
+
+    choose_products =  c3.selectbox("Choose Oil", products)
+
+    if c3.button('SHOW MAP'):
+      pass
 
 elif app_mode == "About Me":
   pass
