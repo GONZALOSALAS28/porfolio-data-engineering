@@ -24,9 +24,9 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-image = Image.open('images_streamlit/1_Fuel-prices.jpg')
+# image = Image.open('images_streamlit/1_Fuel-prices.jpg')
 
-st.sidebar.image(image , caption="Nearby Oil App",width = 256)
+# st.sidebar.image(image , caption="Nearby Oil App",width = 256)
 app_mode = st.sidebar.selectbox("Choose app mode", ["Run App","About Me"])
 
 if app_mode == 'Run App':
