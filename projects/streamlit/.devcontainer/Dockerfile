@@ -41,4 +41,4 @@ RUN conda init zsh \
   && echo "conda activate base" >> ~/.zshrc \
   && echo "conda activate base" >> ~/.bashrc \
   conda activate base && \
-  pip install -r requirements.txt
+  pip install -r requirements_dev.txt
