@@ -4,3 +4,4 @@ confluent-kafka
 py-ccloud
 avro-python3
 pandas
+python-dotenv
