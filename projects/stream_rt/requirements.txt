@@ -1,0 +1,6 @@
+openpyxl
+kafka-python
+confluent-kafka
+py-ccloud
+avro-python3
+pandas
